@@ -30,28 +30,28 @@ export async function GET() {
         const users = await User.insertMany([
             {
                 name: 'Rajesh Kumar',
-                email: 'admin@fleetflow.com',
+                email: 'romilsorathiya9497@gmail.com',
                 password: await bcrypt.hash('Admin@123', 12),
                 role: 'fleet_manager',
                 isActive: true,
             },
             {
                 name: 'Priya Sharma',
-                email: 'dispatch@fleetflow.com',
+                email: 'romilsorathiya9497@gmail.com',
                 password: await bcrypt.hash('Dispatch@123', 12),
                 role: 'dispatcher',
                 isActive: true,
             },
             {
                 name: 'Suresh Patel',
-                email: 'safety@fleetflow.com',
+                email: 'romilsorathiya9497@gmail.com',
                 password: await bcrypt.hash('Safety@123', 12),
                 role: 'safety_officer',
                 isActive: true,
             },
             {
                 name: 'Meena Iyer',
-                email: 'finance@fleetflow.com',
+                email: 'romilsorathiya9497@gmail.com',
                 password: await bcrypt.hash('Finance@123', 12),
                 role: 'financial_analyst',
                 isActive: true,

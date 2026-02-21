@@ -55,7 +55,7 @@ const SafetyRing = ({ score }) => {
 };
 
 const EMPTY_FORM = {
-    name: '', email: '', phone: '', licenseExpiry: '',
+    name: '', email: '', phone: '', licenseNumber: '', licenseExpiry: '',
     licenseCategory: [], safetyScore: 100, status: 'Off Duty',
 };
 
@@ -102,6 +102,7 @@ export default function DriversPage() {
         setEditingDriver(d);
         setForm({
             name: d.name || '', email: d.email || '', phone: d.phone || '',
+            licenseNumber: d.licenseNumber || '',
             licenseExpiry: d.licenseExpiry ? d.licenseExpiry.slice(0, 10) : '',
             licenseCategory: d.licenseCategory || [],
             safetyScore: d.safetyScore ?? 100, status: d.status || 'Off Duty',
@@ -118,7 +119,10 @@ export default function DriversPage() {
                 ...form,
                 safetyScore: Number(form.safetyScore) || 100,
                 licenseCategory: typeof form.licenseCategory === 'string'
-                    ? form.licenseCategory.split(',').map((s) => s.trim()).filter(Boolean)
+                    ? form.licenseCategory.split(',').map((s) => {
+                        const trimmed = s.trim();
+                        return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+                    }).filter(Boolean)
                     : form.licenseCategory,
             };
             const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -177,9 +181,9 @@ export default function DriversPage() {
                 </select>
                 <select className={styles.selectInput} value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
                     <option value="">All Categories</option>
-                    <option value="HMV">HMV</option>
-                    <option value="LMV">LMV</option>
-                    <option value="MCWG">MCWG</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Van">Van</option>
+                    <option value="Bike">Bike</option>
                 </select>
             </div>
 
@@ -286,8 +290,9 @@ export default function DriversPage() {
                     <div className={styles.formGroup}><label className={styles.formLabel}>Full Name *</label><input className={styles.formInput} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Rajesh Kumar" /></div>
                     <div className={styles.formGroup}><label className={styles.formLabel}>Email *</label><input className={styles.formInput} type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="e.g. rajesh@fleet.com" /></div>
                     <div className={styles.formGroup}><label className={styles.formLabel}>Phone *</label><input className={styles.formInput} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="e.g. +91 98765 43210" /></div>
+                    <div className={styles.formGroup}><label className={styles.formLabel}>License Number *</label><input className={styles.formInput} value={form.licenseNumber} onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })} placeholder="e.g. GJ01XXXXXXX" /></div>
                     <div className={styles.formGroup}><label className={styles.formLabel}>License Expiry *</label><input className={styles.formInput} type="date" value={form.licenseExpiry} onChange={(e) => setForm({ ...form, licenseExpiry: e.target.value })} /></div>
-                    <div className={styles.formGroup}><label className={styles.formLabel}>License Categories (comma-separated)</label><input className={styles.formInput} value={Array.isArray(form.licenseCategory) ? form.licenseCategory.join(', ') : form.licenseCategory} onChange={(e) => setForm({ ...form, licenseCategory: e.target.value })} placeholder="e.g. HMV, LMV" /></div>
+                    <div className={styles.formGroup}><label className={styles.formLabel}>License Categories (comma-separated)</label><input className={styles.formInput} value={Array.isArray(form.licenseCategory) ? form.licenseCategory.join(', ') : form.licenseCategory} onChange={(e) => setForm({ ...form, licenseCategory: e.target.value })} placeholder="e.g. Truck, Van, Bike" /></div>
                     <div className={styles.formGroup}><label className={styles.formLabel}>Safety Score</label><input className={styles.formInput} type="number" min="0" max="100" value={form.safetyScore} onChange={(e) => setForm({ ...form, safetyScore: e.target.value })} /></div>
                     {editingDriver && (
                         <div className={styles.formGroup}><label className={styles.formLabel}>Status</label>

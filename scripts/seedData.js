@@ -106,10 +106,10 @@ async function seed() {
     // === USERS ===
     const SALT = 12;
     const users = await User.insertMany([
-        { name: 'Admin Manager', email: 'admin@fleetflow.com', password: await bcrypt.hash('Admin@123', SALT), role: 'fleet_manager', isActive: true },
-        { name: 'Dispatcher User', email: 'dispatch@fleetflow.com', password: await bcrypt.hash('Dispatch@123', SALT), role: 'dispatcher', isActive: true },
-        { name: 'Safety Officer', email: 'safety@fleetflow.com', password: await bcrypt.hash('Safety@123', SALT), role: 'safety_officer', isActive: true },
-        { name: 'Finance Analyst', email: 'finance@fleetflow.com', password: await bcrypt.hash('Finance@123', SALT), role: 'financial_analyst', isActive: true },
+        { name: 'Admin Manager', email: 'romilsorathiya9497@gmail.com', password: await bcrypt.hash('Admin@123', SALT), role: 'fleet_manager', isActive: true },
+        { name: 'Dispatcher User', email: 'romilsorathiya9497@gmail.com', password: await bcrypt.hash('Dispatch@123', SALT), role: 'dispatcher', isActive: true },
+        { name: 'Safety Officer', email: 'romilsorathiya9497@gmail.com', password: await bcrypt.hash('Safety@123', SALT), role: 'safety_officer', isActive: true },
+        { name: 'Finance Analyst', email: 'romilsorathiya9497@gmail.com', password: await bcrypt.hash('Finance@123', SALT), role: 'financial_analyst', isActive: true },
     ]);
     console.log(`👤 Seeded ${users.length} users`);
 

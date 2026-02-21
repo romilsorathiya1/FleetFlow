@@ -74,32 +74,118 @@ export default function AnalyticsPage() {
 
     const exportPDF = async () => {
         const { jsPDF } = await import('jspdf');
+        const autoTable = (await import('jspdf-autotable')).default;
+
         const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text('Fleet Analytics Report', 14, 20);
-        doc.setFontSize(11);
-        doc.text(`Period: ${startDate || 'Last ' + preset + ' days'} — ${endDate || 'Today'}`, 14, 30);
+        const primaryColor = [59, 130, 246]; // #3B82F6
+
+        // Helper for PDF currency (jsPDF standard fonts don't support ₹)
+        const formatPDFCurrency = (val) => {
+            const formatted = formatCurrency(val);
+            return formatted.replace(/[^\x00-\x7F]/g, 'Rs. ');
+        };
+
+        // Header
+        doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+        doc.rect(0, 0, 210, 40, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(24);
+        doc.text('FleetFlow Analytics', 14, 25);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text('Comprehensive Fleet Performance Report', 14, 33);
+
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(10);
+        const dateRange = startDate || endDate
+            ? `Period: ${startDate || 'Start'} to ${endDate || 'Today'}`
+            : `Period: Last ${preset} Days`;
+        doc.text(dateRange, 14, 48);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 53);
 
         const s = data?.summary || {};
-        doc.setFontSize(12);
-        doc.text('Summary', 14, 45);
-        doc.setFontSize(10);
-        doc.text(`Total Revenue: ${formatCurrency(s.totalRevenue)}`, 14, 55);
-        doc.text(`Total Fuel Cost: ${formatCurrency(s.totalFuelCost)}`, 14, 62);
-        doc.text(`Total Maintenance: ${formatCurrency(s.totalMaintCost)}`, 14, 69);
-        doc.text(`Total Trips: ${s.totalTrips}`, 14, 76);
+        const netProfitValue = s.totalRevenue - s.totalFuelCost - s.totalMaintCost;
+        const isLoss = netProfitValue < 0;
 
-        let y = 90;
-        doc.setFontSize(12);
-        doc.text('Vehicle ROI', 14, y); y += 10;
-        doc.setFontSize(9);
-        (data?.vehicleROI || []).forEach((v) => {
-            doc.text(`${v.name}: Revenue ${formatCurrency(v.revenue)} | Fuel ${formatCurrency(v.fuelCost)} | Maint ${formatCurrency(v.maintenanceCost)} | ROI ${v.roi}%`, 14, y);
-            y += 7;
-            if (y > 270) { doc.addPage(); y = 20; }
+        // Summary Table
+        autoTable(doc, {
+            startY: 60,
+            head: [['Metric', 'Value']],
+            body: [
+                ['Total Revenue', formatPDFCurrency(s.totalRevenue)],
+                ['Total Fuel Cost', formatPDFCurrency(s.totalFuelCost)],
+                ['Total Maintenance', formatPDFCurrency(s.totalMaintCost)],
+                [isLoss ? 'Net Loss' : 'Net Profit', formatPDFCurrency(Math.abs(netProfitValue))],
+                ['Total Trips', s.totalTrips.toString()],
+                ['Active Alerts', data?.summary?.activeAlerts?.toString() || '0'],
+            ],
+            theme: 'striped',
+            headStyles: { fillColor: primaryColor, textColor: 255, fontStyle: 'bold' },
+            margin: { left: 14, right: 14 },
+            styles: { fontSize: 10, cellPadding: 4 },
+            didParseCell: (data) => {
+                // Color Net Loss row red if profit is negative
+                if (data.section === 'body' && data.row.index === 3 && isLoss) {
+                    data.cell.styles.textColor = [239, 68, 68]; // #EF4444 (Danger Red)
+                    data.cell.styles.fontStyle = 'bold';
+                }
+            }
         });
 
-        doc.save('fleet-analytics.pdf');
+        // Vehicle ROI Table
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Vehicle ROI & Performance', 14, doc.lastAutoTable.finalY + 15);
+
+        const roiBody = (data?.vehicleROI || []).map(v => [
+            v.name,
+            formatPDFCurrency(v.revenue),
+            formatPDFCurrency(v.fuelCost),
+            formatPDFCurrency(v.maintenanceCost),
+            formatPDFCurrency(v.fuelCost + v.maintenanceCost),
+            `${v.roi}%`
+        ]);
+
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 20,
+            head: [['Vehicle', 'Revenue', 'Fuel', 'Maint.', 'Total Exp.', 'ROI']],
+            body: roiBody,
+            theme: 'grid',
+            headStyles: { fillColor: [75, 85, 99], textColor: 255, fontStyle: 'bold' },
+            columnStyles: {
+                0: { cellWidth: 35 },
+                1: { halign: 'right', cellWidth: 32 },
+                2: { halign: 'right', cellWidth: 28 },
+                3: { halign: 'right', cellWidth: 28 },
+                4: { halign: 'right', cellWidth: 32 },
+                5: { fontStyle: 'bold', halign: 'right', cellWidth: 20 },
+            },
+            margin: { left: 14, right: 14 },
+            styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak' },
+            didParseCell: (data) => {
+                if (data.section === 'body' && data.column.index === 5) {
+                    const val = parseFloat(data.cell.raw);
+                    if (val > 20) data.cell.styles.textColor = [16, 185, 129]; // Success
+                    else if (val < 0) data.cell.styles.textColor = [239, 68, 68]; // Danger
+                }
+            }
+        });
+
+        // Footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text(`Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
+            doc.text('© 2026 FleetFlow — Business Intelligence Report', 14, 285);
+        }
+
+        doc.save(`FleetFlow_Analytics_${new Date().toISOString().slice(0, 10)}.pdf`);
     };
 
     if (loading) return <LoadingSpinner />;

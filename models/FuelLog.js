@@ -39,14 +39,12 @@ const FuelLogSchema = new mongoose.Schema(
 );
 
 // Pre-save hook: auto-calculate totalCost and fuelEfficiency
-FuelLogSchema.pre('save', function (next) {
+FuelLogSchema.pre('save', function () {
     this.totalCost = this.liters * this.costPerLiter;
 
     if (this.kmDriven && this.liters > 0) {
         this.fuelEfficiency = parseFloat((this.kmDriven / this.liters).toFixed(2));
     }
-
-    next();
 });
 
 // Indexes

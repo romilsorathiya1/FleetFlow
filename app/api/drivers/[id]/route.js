@@ -69,6 +69,17 @@ export async function PUT(request, { params }) {
         }
         return NextResponse.json(driver);
     } catch (error) {
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern || {})[0] || 'email';
+            const message = field === 'licenseNumber'
+                ? 'A driver with this license number already exists'
+                : 'A driver with this email already exists';
+
+            return NextResponse.json(
+                { error: message, field, code: 'DUPLICATE' },
+                { status: 409 }
+            );
+        }
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

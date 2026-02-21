@@ -1,1 +1,3 @@
-export { default } from '../../dashboard/layout';
+export default function DriverDetailLayout({ children }) {
+    return children;
+}

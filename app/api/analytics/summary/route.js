@@ -9,9 +9,20 @@ import Alert from '@/models/Alert';
 import { runAllAlertChecks } from '@/lib/alertChecks';
 
 // GET /api/analytics/summary — Dashboard KPI summary
-export async function GET() {
+export async function GET(request) {
     try {
         await dbConnect();
+
+        // Parse filter params
+        const { searchParams } = new URL(request.url);
+        const typeParam = searchParams.get('type');
+        const regionParam = searchParams.get('region');
+
+        // Build vehicle filter
+        const vehicleFilter = {};
+        if (typeParam) vehicleFilter.type = typeParam;
+        if (regionParam) vehicleFilter.region = regionParam;
+        const hasFilter = Object.keys(vehicleFilter).length > 0;
 
         // Run alert checks non-blocking (fires and forgets)
         runAllAlertChecks().catch(() => { });
@@ -40,26 +51,38 @@ export async function GET() {
             idleVehicles,
             maintenanceDueVehicles,
         ] = await Promise.all([
-            Vehicle.countDocuments(),
-            Vehicle.countDocuments({ status: 'Available' }),
-            Vehicle.countDocuments({ status: 'On Trip' }),
-            Vehicle.countDocuments({ status: 'In Shop' }),
-            Vehicle.countDocuments({ status: 'Retired' }),
+            Vehicle.countDocuments(vehicleFilter),
+            Vehicle.countDocuments({ ...vehicleFilter, status: 'Available' }),
+            Vehicle.countDocuments({ ...vehicleFilter, status: 'On Trip' }),
+            Vehicle.countDocuments({ ...vehicleFilter, status: 'In Shop' }),
+            Vehicle.countDocuments({ ...vehicleFilter, status: 'Retired' }),
             Driver.countDocuments(),
             Driver.countDocuments({ status: 'Off Duty' }),
             Driver.countDocuments({ status: 'On Duty' }),
             Trip.countDocuments({ status: 'Draft' }),
             Alert.countDocuments({ isRead: false, isDismissed: false }),
+            // Recent trips: filter by vehicle type/region via populate match
             Trip.find()
                 .sort({ createdAt: -1 })
-                .limit(5)
-                .populate('vehicle', 'name licensePlate type')
+                .limit(20)
+                .populate('vehicle', 'name licensePlate type region')
                 .populate('driver', 'name')
-                .lean(),
+                .lean()
+                .then(trips => {
+                    if (!hasFilter) return trips.slice(0, 5);
+                    return trips.filter(t => {
+                        if (!t.vehicle) return false;
+                        if (typeParam && t.vehicle.type !== typeParam) return false;
+                        if (regionParam && t.vehicle.region !== regionParam) return false;
+                        return true;
+                    }).slice(0, 5);
+                }),
             Vehicle.aggregate([
+                ...(hasFilter ? [{ $match: vehicleFilter }] : []),
                 { $group: { _id: '$type', count: { $sum: 1 } } },
             ]),
             Vehicle.aggregate([
+                ...(hasFilter ? [{ $match: vehicleFilter }] : []),
                 { $group: { _id: '$status', count: { $sum: 1 } } },
             ]),
             Driver.find({
@@ -69,6 +92,7 @@ export async function GET() {
                 .sort({ licenseExpiry: 1 })
                 .lean(),
             Vehicle.find({
+                ...vehicleFilter,
                 status: 'Available',
                 $or: [
                     { lastTripDate: { $lt: sevenDaysAgo } },
@@ -79,6 +103,7 @@ export async function GET() {
                 .select('name type lastTripDate')
                 .lean(),
             Vehicle.find({
+                ...vehicleFilter,
                 $expr: {
                     $gte: [
                         { $subtract: ['$currentOdometer', '$lastServiceOdometer'] },

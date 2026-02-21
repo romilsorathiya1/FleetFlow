@@ -14,6 +14,7 @@ import {
     LogOut,
     ChevronLeft,
     ChevronRight,
+    ShieldCheck,
 } from 'lucide-react';
 import { getRoleLabel } from '@/lib/utils';
 import styles from './Sidebar.module.css';
@@ -60,6 +61,12 @@ const NAV_ITEMS = [
         href: '/analytics',
         icon: BarChart3,
         roles: ['fleet_manager', 'financial_analyst'],
+    },
+    {
+        label: 'User Management',
+        href: '/users',
+        icon: ShieldCheck,
+        roles: ['fleet_manager'],
     },
 ];
 

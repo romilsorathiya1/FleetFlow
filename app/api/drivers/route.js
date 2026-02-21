@@ -101,8 +101,13 @@ export async function POST(request) {
         return NextResponse.json(driver, { status: 201 });
     } catch (error) {
         if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern || {})[0] || 'email';
+            const message = field === 'licenseNumber'
+                ? 'A driver with this license number already exists'
+                : 'A driver with this email already exists';
+
             return NextResponse.json(
-                { error: 'A driver with this email already exists', field: 'email', code: 'DUPLICATE' },
+                { error: message, field, code: 'DUPLICATE' },
                 { status: 409 }
             );
         }

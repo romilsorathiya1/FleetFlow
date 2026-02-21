@@ -26,8 +26,8 @@ import { formatNumber, formatDate, formatCurrency } from '@/lib/utils';
 import styles from './vehicles.module.css';
 
 const EMPTY_FORM = {
-    name: '', model: '', licensePlate: '', type: 'Truck', capacity: '',
-    currentOdometer: '', lastServiceOdometer: '', cost: '', region: 'Central', status: 'Available',
+    name: '', model: '', licensePlate: '', type: 'Truck', maxCapacity: '',
+    currentOdometer: '', lastServiceOdometer: '', acquisitionCost: '', region: 'Central', status: 'Available',
 };
 
 export default function VehiclesPage() {
@@ -89,9 +89,9 @@ export default function VehiclesPage() {
         setEditingVehicle(v);
         setForm({
             name: v.name || '', model: v.model || '', licensePlate: v.licensePlate || '',
-            type: v.type || 'Truck', capacity: v.capacity || '',
+            type: v.type || 'Truck', maxCapacity: v.maxCapacity || '',
             currentOdometer: v.currentOdometer || '', lastServiceOdometer: v.lastServiceOdometer || '',
-            cost: v.cost || '', region: v.region || 'Central', status: v.status || 'Available',
+            acquisitionCost: v.acquisitionCost || '', region: v.region || 'Central', status: v.status || 'Available',
         });
         setModalOpen(true);
     };
@@ -106,10 +106,10 @@ export default function VehiclesPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...form,
-                    capacity: Number(form.capacity) || 0,
+                    maxCapacity: Number(form.maxCapacity) || 0,
                     currentOdometer: Number(form.currentOdometer) || 0,
                     lastServiceOdometer: Number(form.lastServiceOdometer) || 0,
-                    cost: Number(form.cost) || 0,
+                    acquisitionCost: Number(form.acquisitionCost) || 0,
                 }),
             });
             if (res.ok) {
@@ -164,7 +164,7 @@ export default function VehiclesPage() {
         else if (odo > 200000) score += 20;
         else if (odo > 100000) score += 10;
         const mCost = v.totalMaintenanceCost || 0;
-        const vCost = v.cost || 1;
+        const vCost = v.acquisitionCost || 1;
         const ratio = mCost / vCost;
         if (ratio > 0.5) score += 30;
         else if (ratio > 0.3) score += 20;
@@ -193,7 +193,7 @@ export default function VehiclesPage() {
         { key: 'status', label: 'Status', render: (_, v) => <StatusBadge status={v.status} /> },
         { key: 'region', label: 'Region' },
         { key: 'currentOdometer', label: 'Odometer', render: (val) => `${formatNumber(val)} km` },
-        { key: 'capacity', label: 'Capacity', render: (val) => `${formatNumber(val)} kg` },
+        { key: 'maxCapacity', label: 'Capacity', render: (val) => `${formatNumber(val)} kg` },
         {
             key: 'actions', label: '', render: (_, v) => (
                 <div style={{ display: 'flex', gap: 6 }}>
@@ -296,7 +296,7 @@ export default function VehiclesPage() {
                                 <div className={styles.cardStats}>
                                     <div className={styles.statItem}>
                                         <div className={styles.statLabel}>Capacity</div>
-                                        <div className={styles.statValue}>{formatNumber(v.capacity)} kg</div>
+                                        <div className={styles.statValue}>{formatNumber(v.maxCapacity)} kg</div>
                                     </div>
                                     <div className={styles.statItem}>
                                         <div className={styles.statLabel}>Odometer</div>
@@ -378,20 +378,20 @@ export default function VehiclesPage() {
                         </select>
                     </div>
                     <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Max Capacity (kg)</label>
-                        <input className={styles.formInput} type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} placeholder="e.g. 8000" />
+                        <label className={styles.formLabel}>Max Capacity (kg) *</label>
+                        <input className={styles.formInput} type="number" value={form.maxCapacity} onChange={(e) => setForm({ ...form, maxCapacity: e.target.value })} placeholder="e.g. 8000" />
                     </div>
                     <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Acquisition Cost (₹)</label>
-                        <input className={styles.formInput} type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} placeholder="e.g. 2500000" />
+                        <input className={styles.formInput} type="number" value={form.acquisitionCost} onChange={(e) => setForm({ ...form, acquisitionCost: e.target.value })} placeholder="e.g. 2500000" />
                     </div>
                     <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Current Odometer (km)</label>
-                        <input className={styles.formInput} type="number" value={form.currentOdometer} onChange={(e) => setForm({ ...form, currentOdometer: e.target.value })} placeholder="e.g. 45000" />
+                        <input className={styles.formInput} type="number" value={form.currentOdometer} onChange={(e) => setForm({ ...form, currentOdometer: e.target.value })} placeholder="Total km driven so far, e.g. 45000" />
                     </div>
                     <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Last Service Odometer (km)</label>
-                        <input className={styles.formInput} type="number" value={form.lastServiceOdometer} onChange={(e) => setForm({ ...form, lastServiceOdometer: e.target.value })} placeholder="e.g. 40000" />
+                        <input className={styles.formInput} type="number" value={form.lastServiceOdometer} onChange={(e) => setForm({ ...form, lastServiceOdometer: e.target.value })} placeholder="Odometer at last service, e.g. 40000" />
                     </div>
                     <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Region</label>
@@ -437,7 +437,7 @@ export default function VehiclesPage() {
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>License Plate</div><div className={styles.detailValue} style={{ fontFamily: 'monospace' }}>{drawerVehicle.licensePlate}</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Type</div><div className={styles.detailValue}>{drawerVehicle.type}</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Status</div><div className={styles.detailValue}><StatusBadge status={drawerVehicle.status} /></div></div>
-                                    <div className={styles.detailItem}><div className={styles.detailLabel}>Capacity</div><div className={styles.detailValue}>{formatNumber(drawerVehicle.capacity)} kg</div></div>
+                                    <div className={styles.detailItem}><div className={styles.detailLabel}>Capacity</div><div className={styles.detailValue}>{formatNumber(drawerVehicle.maxCapacity)} kg</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Odometer</div><div className={styles.detailValue}>{formatNumber(drawerVehicle.currentOdometer)} km</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Region</div><div className={styles.detailValue}>{drawerVehicle.region || '—'}</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Added</div><div className={styles.detailValue}>{formatDate(drawerVehicle.createdAt)}</div></div>
@@ -445,10 +445,10 @@ export default function VehiclesPage() {
                             )}
                             {drawerTab === 'costs' && (
                                 <div className={styles.detailGrid}>
-                                    <div className={styles.detailItem}><div className={styles.detailLabel}>Acquisition Cost</div><div className={styles.detailValue}>{formatCurrency(drawerVehicle.cost)}</div></div>
+                                    <div className={styles.detailItem}><div className={styles.detailLabel}>Acquisition Cost</div><div className={styles.detailValue}>{formatCurrency(drawerVehicle.acquisitionCost)}</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Maintenance Cost</div><div className={styles.detailValue}>{formatCurrency(drawerVehicle.totalMaintenanceCost)}</div></div>
                                     <div className={styles.detailItem}><div className={styles.detailLabel}>Fuel Cost</div><div className={styles.detailValue}>{formatCurrency(drawerVehicle.totalFuelCost)}</div></div>
-                                    <div className={styles.detailItem}><div className={styles.detailLabel}>Total Cost</div><div className={styles.detailValue} style={{ color: 'var(--color-warning)' }}>{formatCurrency((drawerVehicle.cost || 0) + (drawerVehicle.totalMaintenanceCost || 0) + (drawerVehicle.totalFuelCost || 0))}</div></div>
+                                    <div className={styles.detailItem}><div className={styles.detailLabel}>Total Cost</div><div className={styles.detailValue} style={{ color: 'var(--color-warning)' }}>{formatCurrency((drawerVehicle.acquisitionCost || 0) + (drawerVehicle.totalMaintenanceCost || 0) + (drawerVehicle.totalFuelCost || 0))}</div></div>
                                 </div>
                             )}
                         </div>

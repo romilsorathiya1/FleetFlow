@@ -40,12 +40,16 @@ export default function DashboardPage() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [typeFilter, setTypeFilter] = useState('All Types');
+    const [regionFilter, setRegionFilter] = useState('');
     const [showBanner, setShowBanner] = useState(true);
     const [lastUpdated, setLastUpdated] = useState(null);
 
     const fetchData = useCallback(async () => {
         try {
-            const res = await fetch('/api/analytics/summary');
+            const params = new URLSearchParams();
+            if (typeFilter && typeFilter !== 'All Types') params.set('type', typeFilter);
+            if (regionFilter) params.set('region', regionFilter);
+            const res = await fetch(`/api/analytics/summary?${params.toString()}`);
             if (res.ok) {
                 const json = await res.json();
                 setData(json);
@@ -56,7 +60,7 @@ export default function DashboardPage() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [typeFilter, regionFilter]);
 
     useEffect(() => {
         fetchData();
@@ -132,7 +136,7 @@ export default function DashboardPage() {
                         {type}
                     </button>
                 ))}
-                <select className={styles.regionSelect}>
+                <select className={styles.regionSelect} value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)}>
                     <option value="">All Regions</option>
                     <option value="Central">Central</option>
                     <option value="North">North</option>

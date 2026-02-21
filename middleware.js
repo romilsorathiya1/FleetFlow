@@ -11,6 +11,7 @@ const ROLE_ACCESS = {
     '/fuel-logs': ['fleet_manager', 'financial_analyst'],
     '/drivers': ['fleet_manager', 'safety_officer', 'dispatcher'],
     '/analytics': ['fleet_manager', 'financial_analyst'],
+    '/users': ['fleet_manager'],
 };
 
 export async function middleware(request) {
@@ -62,5 +63,6 @@ export const config = {
         '/fuel-logs/:path*',
         '/drivers/:path*',
         '/analytics/:path*',
+        '/users/:path*',
     ],
 };
