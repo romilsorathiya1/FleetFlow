@@ -1,0 +1,350 @@
+.page {
+    padding: 24px;
+    max-width: 1400px;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.pills {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pillVal {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.addBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.addBtn:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.selectInput {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-lg);
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.selectInput:focus {
+    border-color: var(--color-accent);
+}
+
+.dateInput {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-lg);
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+    outline: none;
+}
+
+.dateInput:focus {
+    border-color: var(--color-accent);
+}
+
+/* Sections */
+.section {
+    margin-bottom: 32px;
+}
+
+.sectionTitle {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 16px;
+}
+
+/* Chart wrapper */
+.chartCard {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    margin-bottom: 32px;
+}
+
+/* Operational cost table */
+.costTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.costTable thead tr {
+    background: var(--color-bg);
+}
+
+.costTable th {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.costTable td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+.costTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.costTable tbody tr {
+    transition: background 0.15s ease;
+}
+
+.costTable tbody tr:hover {
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.profit {
+    color: var(--color-success);
+    font-weight: 700;
+}
+
+.loss {
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+/* Live calc box */
+.calcBox {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-top: 12px;
+}
+
+.calcRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.8125rem;
+}
+
+.calcLabel {
+    color: var(--color-text-muted);
+}
+
+.calcValue {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* Form */
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroupFull {
+    grid-column: 1 / -1;
+}
+
+.formLabel {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.formInput {
+    width: 100%;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-lg);
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.formInput:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.cancelBtn {
+    padding: 10px 20px;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.cancelBtn:hover {
+    border-color: var(--color-text-muted);
+}
+
+.saveBtn {
+    padding: 10px 20px;
+    border-radius: var(--radius-lg);
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.saveBtn:hover {
+    background: var(--color-accent-hover);
+}
+
+.saveBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Empty */
+.empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.emptyIcon {
+    color: var(--color-text-muted);
+    opacity: 0.3;
+    margin-bottom: 16px;
+}
+
+.emptyTitle {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.emptyText {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .costTable {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.75rem;
+    }
+
+    .costTable th,
+    .costTable td {
+        padding: 10px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page {
+        padding: 12px;
+    }
+
+    .addBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .chartCard {
+        padding: 12px;
+    }
+
+    .calcRow {
+        font-size: 0.75rem;
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "env": {
+        "MONGODB_URI": "@mongodb-uri",
+        "NEXTAUTH_SECRET": "@nextauth-secret"
+    },
+    "functions": {
+        "app/api/**": {
+            "maxDuration": 30
+        }
+    }
+}

@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚛 FleetFlow
 
-## Getting Started
+**Enterprise Fleet Management Dashboard** — A modern, full-featured fleet management system built with Next.js 14, MongoDB, and NextAuth.js.
 
-First, run the development server:
+![FleetFlow Dashboard](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Auth](https://img.shields.io/badge/NextAuth.js-000?style=for-the-badge&logo=next.js)
+![CSS](https://img.shields.io/badge/Vanilla%20CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+
+---
+
+## ✨ Features
+
+- ✅ **Role-Based Dashboard** — Fleet Manager, Dispatcher, Safety Officer, Financial Analyst
+- ✅ **Vehicle Management** — CRUD, status tracking, odometer, capacity, regional assignment
+- ✅ **Driver Management** — License tracking, safety scores, incident logs, duty status
+- ✅ **Trip Lifecycle** — Draft → Dispatch → Complete/Cancel with cargo & route details
+- ✅ **Fuel Log Tracking** — Per-trip/vehicle fuel records with efficiency calculations
+- ✅ **Maintenance Logs** — Service tracking with cost, provider, and status
+- ✅ **Analytics & Reports** — Financial overview, trends, ROI, utilization charts
+- ✅ **Alerts System** — Auto-generated alerts for service due, license expiry, idle vehicles
+- ✅ **Notification Center** — Real-time notification drawer with filter tabs
+- ✅ **Dark / Light Mode** — Theme toggle with localStorage persistence
+- ✅ **Global Search** — Search across vehicles, drivers, and trips (Ctrl+K)
+- ✅ **Keyboard Shortcuts** — Ctrl+K (search), ? (help), Escape (close modals)
+- ✅ **Toast Notifications** — Success, error, warning, info toasts
+- ✅ **Print-Ready Trip Sheets** — Clean A4 print layout
+- ✅ **Responsive Design** — Works on desktop, tablet, and mobile
+- ✅ **CSV & PDF Export** — Export analytics reports
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | Next.js 14 (App Router) |
+| **Database** | MongoDB + Mongoose |
+| **Auth** | NextAuth.js (Credentials) |
+| **Styling** | Vanilla CSS (CSS Modules + Variables) |
+| **Charts** | Recharts |
+| **Icons** | Lucide React |
+| **Dates** | date-fns |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** 18+
+- **MongoDB** (local or Atlas)
+
+### Installation
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/fleetflow.git
+cd fleetflow
+
+# 2. Install dependencies
+npm install
+
+# 3. Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your MongoDB URI and NextAuth secret
+
+# 4. Seed the database with demo data
+node scripts/seedData.js
+
+# 5. Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file:
 
-## Learn More
+```env
+MONGODB_URI=mongodb://localhost:27017/fleetflow
+NEXTAUTH_SECRET=your-secret-key-here
+NEXTAUTH_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Demo Credentials
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Role | Email | Password |
+|------|-------|----------|
+| **Fleet Manager** (Admin) | admin@fleetflow.com | Admin@123 |
+| **Dispatcher** | dispatch@fleetflow.com | Dispatch@123 |
+| **Safety Officer** | safety@fleetflow.com | Safety@123 |
+| **Financial Analyst** | finance@fleetflow.com | Finance@123 |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+fleetflow/
+├── app/                    # Next.js App Router
+│   ├── api/                # API routes
+│   │   ├── alerts/         # Alert endpoints
+│   │   ├── analytics/      # Summary + reports
+│   │   ├── auth/           # NextAuth handler
+│   │   ├── drivers/        # Driver CRUD
+│   │   ├── fuel-logs/      # Fuel log CRUD
+│   │   ├── maintenance/    # Maintenance CRUD
+│   │   ├── search/         # Global search
+│   │   ├── trips/          # Trip CRUD + lifecycle
+│   │   ├── users/          # User management
+│   │   └── vehicles/       # Vehicle CRUD
+│   ├── dashboard/          # Protected layout
+│   ├── (pages)/            # Feature pages
+│   └── login/              # Auth page
+├── components/ui/          # Reusable UI components
+│   ├── Sidebar.jsx         # Navigation sidebar
+│   ├── TopBar.jsx          # Top bar + search
+│   ├── NotificationCenter.jsx
+│   ├── Toast.jsx           # Toast notifications
+│   ├── KeyboardShortcuts.jsx
+│   └── LoadingSpinner.jsx
+├── lib/                    # Utilities
+│   ├── mongodb.js          # DB connection
+│   ├── utils.js            # Helper functions
+│   └── alertChecks.js      # Auto alert checks
+├── models/                 # Mongoose models
+│   ├── User.js
+│   ├── Vehicle.js
+│   ├── Driver.js
+│   ├── Trip.js
+│   ├── FuelLog.js
+│   ├── MaintenanceLog.js
+│   └── Alert.js
+├── scripts/
+│   └── seedData.js         # Database seeder
+└── styles/                 # Global CSS
+    ├── variables.css        # Design tokens
+    ├── globals.css          # Reset + utilities
+    └── components.css       # Shared component styles
+```
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl/⌘ + K` | Focus global search |
+| `Ctrl/⌘ + N` | New trip (Trips page) |
+| `Escape` | Close modal/drawer |
+| `?` | Show shortcuts help |
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.

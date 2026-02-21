@@ -1,0 +1,304 @@
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+}
+
+.breadcrumb a {
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--color-accent);
+}
+
+.breadcrumbSep {
+    opacity: 0.4;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.iconBtn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.iconBtn:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.alertBadge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--color-danger);
+    color: #fff;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.roleChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.roleChip svg {
+    opacity: 0.7;
+}
+
+/* ===== Global Search ===== */
+.searchWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 12px;
+    color: var(--color-text-muted);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.searchInput {
+    width: 220px;
+    padding: 8px 60px 8px 34px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-primary);
+    font-size: 0.8125rem;
+    transition: width 0.3s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.searchInput::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.searchInput.searchFocused {
+    width: 300px;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.searchKbd {
+    position: absolute;
+    right: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-family: inherit;
+    color: var(--color-text-muted);
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* ===== Search Dropdown ===== */
+.searchDropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    min-width: 300px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 200;
+    overflow: hidden;
+    animation: dropdownIn 0.15s ease;
+}
+
+@keyframes dropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resultSection {
+    padding: 8px 16px;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    font-weight: 600;
+}
+
+.resultItem {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8125rem;
+    color: var(--color-text-primary);
+    transition: background 0.15s ease;
+}
+
+.resultItem:hover {
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.resultMeta {
+    margin-left: auto;
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    font-family: monospace;
+}
+
+.searchLoading {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+}
+
+/* ===== Hamburger Menu Button ===== */
+.menuBtn {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.menuBtn:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .menuBtn {
+        display: flex;
+    }
+
+    .left {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .breadcrumb {
+        display: none;
+    }
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .topbar {
+        padding: 12px 16px;
+    }
+
+    .searchInput {
+        width: 140px;
+    }
+
+    .searchInput.searchFocused {
+        width: 200px;
+    }
+
+    .searchKbd {
+        display: none;
+    }
+
+    .roleChip {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .searchWrapper {
+        display: none;
+    }
+
+    .right {
+        gap: 8px;
+    }
+
+    .topbar {
+        padding: 10px 12px;
+    }
+}

@@ -1,0 +1,115 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+}
+
+.glowOrb {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.15);
+        opacity: 0.8;
+    }
+}
+
+.iconWrapper {
+    color: var(--color-danger);
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    color: var(--color-text-primary);
+    margin: 0 0 0.75rem;
+}
+
+.message {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0 0 2rem;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.retryBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+}
+
+.retryBtn:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+}
+
+.homeLink {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: var(--transition-base);
+}
+
+.homeLink:hover {
+    color: var(--color-accent);
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.375rem;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}
